@@ -6,7 +6,7 @@
     <AssemblyFileVersion>1.0.0</AssemblyFileVersion>
     <AssemblyTitle>Amazon.SQS.ExtendedClient</AssemblyTitle>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Strava.NET.snk</AssemblyOriginatorKeyFile>    
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>    
     <Description>Extension to Amazon SQS that adds support for sending and receiving messages greater than 256K</Description>
     <Authors>Oleg Rakitskiy</Authors>
     <PackageId>Amazon.SQS.ExtendedClient</PackageId>
