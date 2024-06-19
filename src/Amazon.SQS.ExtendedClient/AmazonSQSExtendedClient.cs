@@ -1,5 +1,9 @@
 ﻿namespace Amazon.SQS.ExtendedClient
 {
+    using Model;
+    using Newtonsoft.Json;
+    using Runtime;
+    using S3.Model;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -7,10 +11,6 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using Model;
-    using Newtonsoft.Json;
-    using Runtime;
-    using S3.Model;
 
     public partial class AmazonSQSExtendedClient : AmazonSQSExtendedClientBase
     {
@@ -28,6 +28,41 @@
             clientConfiguration = configuration;
         }
 
+        public override Task<ChangeMessageVisibilityResponse> ChangeMessageVisibilityAsync(string queueUrl, string receiptHandle, int visibilityTimeout,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return ChangeMessageVisibilityAsync(new ChangeMessageVisibilityRequest(queueUrl, receiptHandle, visibilityTimeout), cancellationToken);
+        }
+
+        public override Task<ChangeMessageVisibilityResponse> ChangeMessageVisibilityAsync(ChangeMessageVisibilityRequest request,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            request.ReceiptHandle = IsS3ReceiptHandle(request.ReceiptHandle)
+                ? GetOriginalReceiptHandle(request.ReceiptHandle)
+                : request.ReceiptHandle;
+
+            return base.ChangeMessageVisibilityAsync(request, cancellationToken);
+        }
+
+        public override Task<ChangeMessageVisibilityBatchResponse> ChangeMessageVisibilityBatchAsync(string queueUrl, List<ChangeMessageVisibilityBatchRequestEntry> entries,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return ChangeMessageVisibilityBatchAsync(new ChangeMessageVisibilityBatchRequest(queueUrl, entries), cancellationToken);
+        }
+
+        public override Task<ChangeMessageVisibilityBatchResponse> ChangeMessageVisibilityBatchAsync(ChangeMessageVisibilityBatchRequest request,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            foreach (var entry in request.Entries)
+            {
+                entry.ReceiptHandle = IsS3ReceiptHandle(entry.ReceiptHandle)
+                    ? GetOriginalReceiptHandle(entry.ReceiptHandle)
+                    : entry.ReceiptHandle;
+            }
+
+            return base.ChangeMessageVisibilityBatchAsync(request, cancellationToken);
+        }
+
         public override async Task<SendMessageResponse> SendMessageAsync(SendMessageRequest sendMessageRequest, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (sendMessageRequest == null)
@@ -37,7 +72,7 @@
 
             if (string.IsNullOrEmpty(sendMessageRequest.MessageBody))
             {
-                throw new AmazonClientException("MessageBody cannone be null or empty");
+                throw new AmazonClientException("MessageBody cannot be null or empty");
             }
 
             if (!clientConfiguration.IsLargePayloadSupportEnabled)
@@ -290,7 +325,7 @@
         {
             CheckMessageAttributes(batchEntry.MessageAttributes);
 
-            var s3Key = clientConfiguration.S3KeyPovider.GenerateName();
+            var s3Key = clientConfiguration.Is3KeyProvider.GenerateName();
             var messageContentStr = batchEntry.MessageBody;
             var messageContentSize = Encoding.UTF8.GetBytes(messageContentStr).LongCount();
 
@@ -310,7 +345,7 @@
         {
             CheckMessageAttributes(sendMessageRequest.MessageAttributes);
 
-            var s3Key = clientConfiguration.S3KeyPovider.GenerateName();
+            var s3Key = clientConfiguration.Is3KeyProvider.GenerateName();
             var messageContentStr = sendMessageRequest.MessageBody;
             var messageContentSize = Encoding.UTF8.GetBytes(messageContentStr).LongCount();
 
@@ -349,7 +384,15 @@
         {
             try
             {
-                await clientConfiguration.S3.PutObjectAsync(new PutObjectRequest { BucketName = clientConfiguration.S3BucketName, Key = s3Key, ContentBody = messageContent }, cancellationToken).ConfigureAwait(false);
+                var putObjectRequest = new PutObjectRequest
+                {
+                    BucketName = clientConfiguration.S3BucketName,
+                    Key = s3Key,
+                    ContentBody = messageContent,
+                    CannedACL = clientConfiguration.S3CannedACL
+                };
+
+                await clientConfiguration.S3.PutObjectAsync(putObjectRequest, cancellationToken).ConfigureAwait(false);
             }
             catch (AmazonServiceException e)
             {

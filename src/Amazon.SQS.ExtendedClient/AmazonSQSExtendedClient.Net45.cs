@@ -15,6 +15,36 @@
     public partial class AmazonSQSExtendedClient
     {
 #if NET45
+        public override ChangeMessageVisibilityResponse ChangeMessageVisibility(string queueUrl, string receiptHandle, int visibilityTimeout)
+        {
+            return ChangeMessageVisibility(new ChangeMessageVisibilityRequest(queueUrl, receiptHandle, visibilityTimeout));
+        }
+
+        public override ChangeMessageVisibilityResponse ChangeMessageVisibility(ChangeMessageVisibilityRequest request)
+        {
+            request.ReceiptHandle = IsS3ReceiptHandle(request.ReceiptHandle)
+                ? GetOriginalReceiptHandle(request.ReceiptHandle)
+                : request.ReceiptHandle;
+            return base.ChangeMessageVisibility(request);
+        }
+
+        public override ChangeMessageVisibilityBatchResponse ChangeMessageVisibilityBatch(string queueUrl, List<ChangeMessageVisibilityBatchRequestEntry> entries)
+        {
+            return ChangeMessageVisibilityBatch(new ChangeMessageVisibilityBatchRequest(queueUrl, entries));
+        }
+
+        public override ChangeMessageVisibilityBatchResponse ChangeMessageVisibilityBatch(ChangeMessageVisibilityBatchRequest request)
+        {
+            foreach (var entry in request.Entries)
+            {
+                entry.ReceiptHandle = IsS3ReceiptHandle(entry.ReceiptHandle)
+                    ? GetOriginalReceiptHandle(entry.ReceiptHandle)
+                    : entry.ReceiptHandle;
+            }
+
+            return base.ChangeMessageVisibilityBatch(request);
+        }
+
         public override SendMessageResponse SendMessage(SendMessageRequest sendMessageRequest)
         {
             if (sendMessageRequest == null)
@@ -174,7 +204,7 @@
         {
             CheckMessageAttributes(batchEntry.MessageAttributes);
 
-            var s3Key = clientConfiguration.S3KeyPovider.GenerateName();
+            var s3Key = clientConfiguration.Is3KeyProvider.GenerateName();
             var messageContentStr = batchEntry.MessageBody;
             var messageContentSize = Encoding.UTF8.GetBytes(messageContentStr).LongCount();
 
@@ -194,7 +224,7 @@
         {
             CheckMessageAttributes(sendMessageRequest.MessageAttributes);
 
-            var s3Key = clientConfiguration.S3KeyPovider.GenerateName();
+            var s3Key = clientConfiguration.Is3KeyProvider.GenerateName();
             var messageContentStr = sendMessageRequest.MessageBody;
             var messageContentSize = Encoding.UTF8.GetBytes(messageContentStr).LongCount();
 

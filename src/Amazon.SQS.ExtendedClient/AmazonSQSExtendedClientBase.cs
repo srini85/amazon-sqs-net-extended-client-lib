@@ -81,46 +81,58 @@ namespace Amazon.SQS.ExtendedClient
         }
 
 #if NET45
-        public ChangeMessageVisibilityResponse ChangeMessageVisibility(string queueUrl, string receiptHandle, int visibilityTimeout)
+        public CancelMessageMoveTaskResponse CancelMessageMoveTask(CancelMessageMoveTaskRequest request)
+        {
+            return amazonSqsToBeExtended.CancelMessageMoveTask(request);
+        }
+#endif
+
+        public Task<CancelMessageMoveTaskResponse> CancelMessageMoveTaskAsync(CancelMessageMoveTaskRequest request,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            return amazonSqsToBeExtended.CancelMessageMoveTaskAsync(request, cancellationToken);
+        }
+
+#if NET45
+        public virtual ChangeMessageVisibilityResponse ChangeMessageVisibility(string queueUrl, string receiptHandle, int visibilityTimeout)
         {
             return amazonSqsToBeExtended.ChangeMessageVisibility(queueUrl, receiptHandle, visibilityTimeout);
         }
 
-        public ChangeMessageVisibilityResponse ChangeMessageVisibility(ChangeMessageVisibilityRequest request)
+        public virtual ChangeMessageVisibilityResponse ChangeMessageVisibility(ChangeMessageVisibilityRequest request)
         {
             return amazonSqsToBeExtended.ChangeMessageVisibility(request);
         }
 #endif
 
-        public Task<ChangeMessageVisibilityResponse> ChangeMessageVisibilityAsync(string queueUrl, string receiptHandle, int visibilityTimeout, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<ChangeMessageVisibilityResponse> ChangeMessageVisibilityAsync(string queueUrl, string receiptHandle, int visibilityTimeout, CancellationToken cancellationToken = default(CancellationToken))
         {
             return amazonSqsToBeExtended.ChangeMessageVisibilityAsync(queueUrl, receiptHandle, visibilityTimeout, cancellationToken);
         }
 
-        public Task<ChangeMessageVisibilityResponse> ChangeMessageVisibilityAsync(ChangeMessageVisibilityRequest request, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<ChangeMessageVisibilityResponse> ChangeMessageVisibilityAsync(ChangeMessageVisibilityRequest request, CancellationToken cancellationToken = default(CancellationToken))
         {
             return amazonSqsToBeExtended.ChangeMessageVisibilityAsync(request, cancellationToken);
         }
 
 #if NET45
-        public ChangeMessageVisibilityBatchResponse ChangeMessageVisibilityBatch(string queueUrl, List<ChangeMessageVisibilityBatchRequestEntry> entries)
+        public virtual ChangeMessageVisibilityBatchResponse ChangeMessageVisibilityBatch(string queueUrl, List<ChangeMessageVisibilityBatchRequestEntry> entries)
         {
             return amazonSqsToBeExtended.ChangeMessageVisibilityBatch(queueUrl, entries);
         }
 
-        public ChangeMessageVisibilityBatchResponse ChangeMessageVisibilityBatch(ChangeMessageVisibilityBatchRequest request)
+        public virtual ChangeMessageVisibilityBatchResponse ChangeMessageVisibilityBatch(ChangeMessageVisibilityBatchRequest request)
         {
             return amazonSqsToBeExtended.ChangeMessageVisibilityBatch(request);
         }
-        
 #endif
 
-        public Task<ChangeMessageVisibilityBatchResponse> ChangeMessageVisibilityBatchAsync(string queueUrl, List<ChangeMessageVisibilityBatchRequestEntry> entries, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<ChangeMessageVisibilityBatchResponse> ChangeMessageVisibilityBatchAsync(string queueUrl, List<ChangeMessageVisibilityBatchRequestEntry> entries, CancellationToken cancellationToken = default(CancellationToken))
         {
             return amazonSqsToBeExtended.ChangeMessageVisibilityBatchAsync(queueUrl, entries, cancellationToken);
         }
 
-        public Task<ChangeMessageVisibilityBatchResponse> ChangeMessageVisibilityBatchAsync(ChangeMessageVisibilityBatchRequest request, CancellationToken cancellationToken = default(CancellationToken))
+        public virtual Task<ChangeMessageVisibilityBatchResponse> ChangeMessageVisibilityBatchAsync(ChangeMessageVisibilityBatchRequest request, CancellationToken cancellationToken = default(CancellationToken))
         {
             return amazonSqsToBeExtended.ChangeMessageVisibilityBatchAsync(request, cancellationToken);
         }
@@ -266,6 +278,17 @@ namespace Amazon.SQS.ExtendedClient
         public Task<ListDeadLetterSourceQueuesResponse> ListDeadLetterSourceQueuesAsync(ListDeadLetterSourceQueuesRequest request, CancellationToken cancellationToken = default(CancellationToken))
         {
             return amazonSqsToBeExtended.ListDeadLetterSourceQueuesAsync(request, cancellationToken);
+        }
+#if NET45
+        public ListMessageMoveTasksResponse ListMessageMoveTasks(ListMessageMoveTasksRequest request)
+        {
+            return amazonSqsToBeExtended.ListMessageMoveTasks(request);
+        }
+#endif
+        public Task<ListMessageMoveTasksResponse> ListMessageMoveTasksAsync(ListMessageMoveTasksRequest request,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            return amazonSqsToBeExtended.ListMessageMoveTasksAsync(request, cancellationToken);
         }
 
 #if NET45
@@ -435,6 +458,19 @@ namespace Amazon.SQS.ExtendedClient
         }
 
 #if NET45
+        public StartMessageMoveTaskResponse StartMessageMoveTask(StartMessageMoveTaskRequest request)
+        {
+            return amazonSqsToBeExtended.StartMessageMoveTask(request);
+        }
+#endif
+
+        public Task<StartMessageMoveTaskResponse> StartMessageMoveTaskAsync(StartMessageMoveTaskRequest request,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            return amazonSqsToBeExtended.StartMessageMoveTaskAsync(request, cancellationToken);
+        }
+
+#if NET45
         public TagQueueResponse TagQueue(TagQueueRequest request)
         {
             return amazonSqsToBeExtended.TagQueue(request);
@@ -459,5 +495,7 @@ namespace Amazon.SQS.ExtendedClient
         }
 
         public IClientConfig Config => amazonSqsToBeExtended.Config;
+
+        public ISQSPaginatorFactory Paginators => amazonSqsToBeExtended.Paginators;
     }
 }

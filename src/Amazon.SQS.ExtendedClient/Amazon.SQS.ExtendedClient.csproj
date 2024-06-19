@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
-    <AssemblyVersion>1.2.1</AssemblyVersion>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <AssemblyVersion>1.3.0</AssemblyVersion>
     <AssemblyFileVersion>1.0.0</AssemblyFileVersion>
     <AssemblyTitle>Amazon.SQS.ExtendedClient</AssemblyTitle>
     <SignAssembly>true</SignAssembly>
@@ -12,10 +12,10 @@
     <PackageId>Amazon.SQS.ExtendedClient</PackageId>
     <PackageTags>AWS Amazon SQS cloud</PackageTags>
     <PackageProjectUrl>https://github.com/raol/amazon-sqs-net-extended-client-lib</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/raol/amazon-sqs-net-extended-client-lib/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/raol/amazon-sqs-net-extended-client-lib</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>1.2.1</Version>
+    <Version>1.6.0</Version>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFrameworkVersion)' == 'net45'">
@@ -23,10 +23,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.21.6" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.16.2" />
-    <PackageReference Include="AWSSDK.SQS" Version="3.3.3.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.200.1" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.200.1" />
+    <PackageReference Include="AWSSDK.SQS" Version="3.7.200.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
